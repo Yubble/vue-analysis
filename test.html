@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <div v-html='message'></div>
+        <wrap-ronnieo></wrap-ronnieo>
+        <ronnieo></ronnieo>
+    </div>
+    <script src="./dist/vue.js"></script>
+    <script>
+        Vue.component('wrapRonnieo', {
+            template: '<h1>全局组件</h1>'
+        })
+        let v1 = new Vue({
+            el: '#app',
+            data: {
+                message: '<strong>中加入队伍记者</strong>'
+            },
+            components: {
+                'ronnieo': {
+                    template: '<h2>是一只小肉喵</h2>'
+                }
+            }
+        });
+    </script>
+</body>
+</html>
