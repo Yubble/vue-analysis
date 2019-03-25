@@ -30,6 +30,7 @@ export default class Dep {
 
   depend () {
     if (Dep.target) {
+      console.log('Dep.target this is ', this)
       Dep.target.addDep(this)
     }
   }
@@ -56,7 +57,9 @@ Dep.target = null
 const targetStack = []
 
 export function pushTarget (target: ?Watcher) {
+  // console.log('将target: ', target, '入栈')
   targetStack.push(target)
+  // console.log('targetStack is ', targetStack)
   Dep.target = target
 }
 

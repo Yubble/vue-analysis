@@ -20,8 +20,10 @@ export function initRender (vm: Component) {
   vm._vnode = null // the root of the child tree
   vm._staticTrees = null // v-once cached trees
   const options = vm.$options
+  // console.log('options._parentVnode is ', options._parentVnode)
   const parentVnode = vm.$vnode = options._parentVnode // the placeholder node in parent tree
   const renderContext = parentVnode && parentVnode.context
+  // console.log('renderContext is ', renderContext)
   vm.$slots = resolveSlots(options._renderChildren, renderContext)
   vm.$scopedSlots = emptyObject
   // bind the createElement fn to this instance
@@ -49,6 +51,7 @@ export function initRender (vm: Component) {
     defineReactive(vm, '$attrs', parentData && parentData.attrs || emptyObject, null, true)
     defineReactive(vm, '$listeners', options._parentListeners || emptyObject, null, true)
   }
+  // console.log('initRender is over')
 }
 
 export function renderMixin (Vue: Class<Component>) {
@@ -61,6 +64,7 @@ export function renderMixin (Vue: Class<Component>) {
 
   Vue.prototype._render = function (): VNode {
     const vm: Component = this
+    // console.log('vm.$options is ', vm.$options)
     const { render, _parentVnode } = vm.$options
 
     if (_parentVnode) {

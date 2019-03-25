@@ -33,6 +33,12 @@ export function createElement (
   normalizationType: any,
   alwaysNormalize: boolean
 ): VNode | Array<VNode> {
+  // console.log('context is ', context)
+  // console.log('tag is ', tag)
+  // console.log('data is ', data)
+  // console.log('children is ', children)
+  // console.log('normalizationType is ', normalizationType)
+  // console.log('alwaysNormalize is ', alwaysNormalize)
   if (Array.isArray(data) || isPrimitive(data)) {
     normalizationType = children
     children = data
@@ -41,6 +47,7 @@ export function createElement (
   if (isTrue(alwaysNormalize)) {
     normalizationType = ALWAYS_NORMALIZE
   }
+  // console.log('调用了_createElement')
   return _createElement(context, tag, data, children, normalizationType)
 }
 
@@ -51,7 +58,10 @@ export function _createElement (
   children?: any,
   normalizationType?: number
 ): VNode | Array<VNode> {
+  // console.log('进入了_createElement, data is ', data)
+  // console.log('data isDef is ', isDef(data))
   if (isDef(data) && isDef((data: any).__ob__)) {
+    // console.log('data isDef, data is ', data)
     process.env.NODE_ENV !== 'production' && warn(
       `Avoid using observed data object as vnode data: ${JSON.stringify(data)}\n` +
       'Always create fresh vnode data objects in each render!',
@@ -118,11 +128,14 @@ export function _createElement (
     // direct component options / constructor
     vnode = createComponent(tag, data, context, children)
   }
+  // console.log('_createelement vnode is ', vnode)
   if (Array.isArray(vnode)) {
+    // console.log('是数组')
     return vnode
   } else if (isDef(vnode)) {
     if (isDef(ns)) applyNS(vnode, ns)
     if (isDef(data)) registerDeepBindings(data)
+    // console.log('不是数组，vnode is ', vnode)
     return vnode
   } else {
     return createEmptyVNode()

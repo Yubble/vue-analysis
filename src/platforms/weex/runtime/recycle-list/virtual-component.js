@@ -71,6 +71,7 @@ function initVirtualComponent (options: Object = {}) {
     const updateComponent = () => {
       vm._update(vm._vnode, false)
     }
+    // console.log('初始化虚拟组件')
     new Watcher(vm, updateComponent, noop, null, true)
 
     vm._isMounted = true

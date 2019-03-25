@@ -34,6 +34,7 @@ export function invokeWithErrorHandling (
 ) {
   let res
   try {
+    // console.log('执行了handler ', handler)
     res = args ? handler.apply(context, args) : handler.call(context)
     if (isPromise(res)) {
       res.catch(e => handleError(e, vm, info + ` (Promise/async)`))

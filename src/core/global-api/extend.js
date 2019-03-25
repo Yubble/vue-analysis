@@ -17,8 +17,12 @@ export function initExtend (Vue: GlobalAPI) {
    * Class inheritance
    */
   Vue.extend = function (extendOptions: Object): Function {
+    // console.log('调用了extend方法', extendOptions)
     extendOptions = extendOptions || {}
     const Super = this
+    // 在Vue.extend的时候，Super指的就是function Vue (options) {}这个构造函数
+    // console.log('Super.options is ', Super.options)
+    // 这里的options也就是在global中加上的基本三项component，directive，filter
     const SuperId = Super.cid
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
     if (cachedCtors[SuperId]) {
@@ -31,6 +35,7 @@ export function initExtend (Vue: GlobalAPI) {
     }
 
     const Sub = function VueComponent (options) {
+      // 这个方法是用来给外部new调用的时候用的
       this._init(options)
     }
     Sub.prototype = Object.create(Super.prototype)
@@ -40,6 +45,7 @@ export function initExtend (Vue: GlobalAPI) {
       Super.options,
       extendOptions
     )
+    // console.log('extend 被调用了')
     Sub['super'] = Super
 
     // For props and computed properties, we define the proxy getters on
@@ -72,6 +78,8 @@ export function initExtend (Vue: GlobalAPI) {
     // been updated.
     Sub.superOptions = Super.options
     Sub.extendOptions = extendOptions
+    // console.log('Sub.options is ', Sub.options)
+    // 此时的Sub.options已经是extendOption和new时的options的结合了
     Sub.sealedOptions = extend({}, Sub.options)
 
     // cache constructor

@@ -12,13 +12,17 @@ function Vue (options) {
   ) {
     warn('Vue is a constructor and should be called with the `new` keyword')
   }
-  console.log('这里是已经被合成的vue: ', this)
+  // console.log('这里是已经被合成的vue: ', this)
   this._init(options)
 }
 
+// console.log('initMixin')
 initMixin(Vue)
+// console.log('stateMixin')
 stateMixin(Vue)
+// console.log('eventsMixin')
 eventsMixin(Vue)
+// console.log('lifecycleMixin')
 lifecycleMixin(Vue)
 renderMixin(Vue)
 

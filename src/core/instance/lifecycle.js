@@ -31,10 +31,13 @@ export function setActiveInstance(vm: Component) {
 
 export function initLifecycle (vm: Component) {
   const options = vm.$options
-
+  // console.log(options.parent)
   // locate first non-abstract parent
   let parent = options.parent
+  // console.log('parent is ', parent)
+  // console.log('options is ', options)
   if (parent && !options.abstract) {
+    // console.log('存在parent且不是抽象组件')
     while (parent.$options.abstract && parent.$parent) {
       parent = parent.$parent
     }
@@ -57,6 +60,7 @@ export function initLifecycle (vm: Component) {
 
 export function lifecycleMixin (Vue: Class<Component>) {
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
+    // console.log('执行了更新')
     const vm: Component = this
     const prevEl = vm.$el
     const prevVnode = vm._vnode
@@ -143,6 +147,7 @@ export function mountComponent (
   el: ?Element,
   hydrating?: boolean
 ): Component {
+  // console.log('调用了mountComponent')
   vm.$el = el
   if (!vm.$options.render) {
     vm.$options.render = createEmptyVNode
@@ -164,6 +169,7 @@ export function mountComponent (
       }
     }
   }
+  // console.log('beforeMount')
   callHook(vm, 'beforeMount')
 
   let updateComponent
@@ -194,6 +200,7 @@ export function mountComponent (
   // we set this to vm._watcher inside the watcher's constructor
   // since the watcher's initial patch may call $forceUpdate (e.g. inside child
   // component's mounted hook), which relies on vm._watcher being already defined
+  // console.log('mountComponent expOrFn is ', updateComponent)
   new Watcher(vm, updateComponent, noop, {
     before () {
       if (vm._isMounted && !vm._isDestroyed) {
@@ -202,13 +209,14 @@ export function mountComponent (
     }
   }, true /* isRenderWatcher */)
   hydrating = false
-
+  // console.log('Wathcer 结束')
   // manually mounted instance, call mounted on self
   // mounted is called for render-created child components in its inserted hook
   if (vm.$vnode == null) {
     vm._isMounted = true
     callHook(vm, 'mounted')
   }
+  // console.log('mountComponent is over')
   return vm
 }
 
@@ -330,9 +338,11 @@ export function deactivateChildComponent (vm: Component, direct?: boolean) {
 }
 
 export function callHook (vm: Component, hook: string) {
+  // console.log('hook is ', hook)
   // #7573 disable dep collection when invoking lifecycle hooks
   pushTarget()
   const handlers = vm.$options[hook]
+  // console.log('handlers is ', handlers)
   const info = `${hook} hook`
   if (handlers) {
     for (let i = 0, j = handlers.length; i < j; i++) {
@@ -340,6 +350,7 @@ export function callHook (vm: Component, hook: string) {
     }
   }
   if (vm._hasHookEvent) {
+    // console.log('有HookEvent')
     vm.$emit('hook:' + hook)
   }
   popTarget()

@@ -16,6 +16,7 @@ import { isFalse, isTrue, isDef, isUndef, isPrimitive } from 'shared/util'
 // thing with Array.prototype.concat. It is guaranteed to be only 1-level deep
 // because functional components already normalize their own children.
 export function simpleNormalizeChildren (children: any) {
+  // console.log('简单化children规范')
   for (let i = 0; i < children.length; i++) {
     if (Array.isArray(children[i])) {
       return Array.prototype.concat.apply([], children)
@@ -41,6 +42,7 @@ function isTextNode (node): boolean {
 }
 
 function normalizeArrayChildren (children: any, nestedIndex?: string): Array<VNode> {
+  // console.log('进入规划Children数组')
   const res = []
   let i, c, lastIndex, last
   for (i = 0; i < children.length; i++) {

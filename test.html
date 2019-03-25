@@ -9,25 +9,201 @@
 <body>
     <div id="app">
         <div v-html='message'></div>
-        <wrap-ronnieo></wrap-ronnieo>
-        <ronnieo></ronnieo>
+        <!-- 这是extend的数据 -->
+        {{extendData}}
+        <!-- <wrap-ronnieo></wrap-ronnieo> -->
+        <ronnieo
+            new-name="肉胖"
+            @hook:created="testHook"
+        ></ronnieo>
+        <rourou></rourou>
+        <!-- <input v-focus type="text"> -->
     </div>
+    <div id="addApp"></div>
     <script src="./dist/vue.js"></script>
     <script>
-        Vue.component('wrapRonnieo', {
-            template: '<h1>全局组件</h1>'
-        })
+        let v2 = new Vue()
+        // <!----------Vue的全局方法----------->
+        // Vue.component('wrapRonnieo', {
+        //     template: '<h1>全局组件</h1>',
+        //     props: {
+        //         'firstProp': Number,
+        //         'second-prop': {
+        //             type: String,
+        //             required: true
+        //         },
+        //         'thired-prop': {
+        //             type: Number,
+        //             default: 100
+        //         }
+        //     }
+        // })
+        // Vue.mixin({
+        //     data: function() {
+        //         return {
+        //             first: 'Walter',
+        //             last: 'White'
+        //         }
+        //     }
+        // })
+        // Vue.directive('focus', {
+        //     bind (el, binding, vnode) {
+        //         console.log('el is ', el)
+        //         console.log('binding is ', binding)
+        //         console.log('vnode is ', vnode)
+        //         console.log('触发绑定了')
+        //     },
+        //     inserted (el, binding, vnode) {
+        //         console.log('el is ', el)
+        //         console.log('binding is ', binding)
+        //         console.log('vnode is ', vnode)
+        //         console.log('塞进父级节点了')
+        //     }
+        // })
+
+        // <!-------------测试inject方法--------------->
+        let secondFatty = {
+            data: function () {
+                return {
+                    name: '小臭喵',
+                    ancestry: this.othern
+                }
+            },
+            template: "<div @click='clickMM'><h2>你好，我是一只{{name}}</h2><div>{{ancestry}}</div></div>",
+            inject: {
+                othern: {                   // othern只是他的一个别名
+                    from: 'passage',        // 说明来源是之前层的passage
+                    default: '这是默认的祖级传递'
+                }
+            },
+            methods: {
+                clickMM() {
+                    console.log('clickMM is ', this)
+                    this.$parent.$emit('msg')
+                }
+            }
+        }
+
+        let founderFatty = {
+            data: function () {
+                return { name: '王于宁' }
+            },
+            props: {
+                newName: {
+                    type: String,
+                    default: 'noName'
+                }
+            },
+            components: {
+                'sfatty': secondFatty
+            },
+            // template: '<div><h2>你好，我是一只{{name}}</h2></div>'
+            template: '<div><h2>你好，我是一只founderFatty{{name}}，I have {{newName}}</h2><sfatty></sfatty></div>'
+            // template: '<div><h2 v-prDire>你好，我是一只{{name}}，I have {{newName}}</h2></div>'
+            ,
+            directives: {
+                prDire: {
+                    inserted: function (el, binds, vnode) {
+                        // console.log(arguments)
+                        // console.log('el is ', el)
+                        // console.log('binding is ', binds)
+                        // console.log('vnode is ', vnode)
+                    }
+                }
+            }
+            ,
+            provide: {
+                jojo: '自己传递的代码'
+            }
+            ,
+            inject: ['passage']
+            ,
+            created() {
+                // console.log('created is ', this)
+                this.$on('msg', function() {
+                    console.log('调用了msg')
+                })
+            }
+        }
+
         let v1 = new Vue({
             el: '#app',
             data: {
                 message: '<strong>中加入队伍记者</strong>'
-            },
+            }
+            ,
             components: {
-                'ronnieo': {
-                    template: '<h2>是一只小肉喵</h2>'
+                'ronnieo': founderFatty
+            }
+            ,
+            methods: {
+                testHook() {
+                    console.log('这是用来测试组件hook方法的')   // 为了证明钩子函数也能从组件标签中传过去
+                    this.name = '肉喵喵'
+                }
+            }
+            ,
+            provide: {
+                passage: '这是一段能传代的代码'
+            }
+            ,
+            created () {
+                console.log('这里是Vue的created')
+            }
+            ,
+            extends: {
+                data () {
+                    return {
+                        message: '<h2>这个是extend的data</h2>',
+                        extendData: '这个是extend'
+                    }
+                },
+                methods: {
+                    extendsAdd() {
+                        console.log('调用了extend的add方法')
+                    }
+                }
+                ,
+                created() {
+                    // console.log('这里是extend的created')
+                }
+                ,
+                components: {
+                    'rourou': {
+                        data: function() {
+                            return {name: '肉喵'}
+                        },
+                        template: '<div><h2>你好，我是一只extend{{name}}</h2></div>'
+                    }
                 }
             }
         });
+
+        // for (let o of v1) {
+        //     console.log(o)
+        // }
+        
+        // <!------------extend--------------->
+
+        // let Profile = Vue.extend({
+        //     template: '<p>{{first}}, {{last}}</p>'
+        // })
+        // Vue.mixin({
+        //     data: function() {
+        //         return {
+        //             first: 'Walter',
+        //             last: 'White'
+        //         }
+        //     }
+        // })
+        // new Profile({
+        //     data: function() {
+        //         return {
+        //             first: 'Walter',
+        //             last: 'White'
+        //         }
+        //     }
+        // }).$mount('#addApp')
     </script>
 </body>
 </html>

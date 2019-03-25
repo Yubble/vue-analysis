@@ -46,6 +46,7 @@ export function proxy (target: Object, sourceKey: string, key: string) {
 }
 
 export function initState (vm: Component) {
+  // console.log('进入了initState方法')
   vm._watchers = []
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props)
@@ -317,6 +318,7 @@ function createWatcher (
 }
 
 export function stateMixin (Vue: Class<Component>) {
+  // console.log('进入了stateMixin方法')
   // flow somehow has problems with directly declared definition object
   // when using Object.defineProperty, so we have to procedurally build up
   // the object here.
@@ -353,6 +355,7 @@ export function stateMixin (Vue: Class<Component>) {
     }
     options = options || {}
     options.user = true
+    // console.log('stateMixin 节点')
     const watcher = new Watcher(vm, expOrFn, cb, options)
     if (options.immediate) {
       try {

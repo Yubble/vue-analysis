@@ -147,8 +147,11 @@ export function defineReactive (
   }
 
   // cater for pre-defined getter/setters
+  // console.log('property is ', property)
   const getter = property && property.get
+  // console.log('getter is ', getter)
   const setter = property && property.set
+  // console.log('setter is ', setter)
   if ((!getter || setter) && arguments.length === 2) {
     val = obj[key]
   }
@@ -158,7 +161,9 @@ export function defineReactive (
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
+      // console.log('get arg is ', arguments)
       const value = getter ? getter.call(obj) : val
+      // console.log('Dep.target ', Dep.target, ' 被访问了')
       if (Dep.target) {
         dep.depend()
         if (childOb) {

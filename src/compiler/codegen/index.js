@@ -52,6 +52,7 @@ export function generate (
 }
 
 export function genElement (el: ASTElement, state: CodegenState): string {
+  // console.log('执行了genElement')
   if (el.parent) {
     el.pre = el.pre || el.parent.pre
   }
@@ -80,11 +81,13 @@ export function genElement (el: ASTElement, state: CodegenState): string {
       }
 
       const children = el.inlineTemplate ? null : genChildren(el, state, true)
+      // console.log('code _c')
       code = `_c('${el.tag}'${
         data ? `,${data}` : '' // data
       }${
         children ? `,${children}` : '' // children
       })`
+      // console.log('code is ', code)
     }
     // module transforms
     for (let i = 0; i < state.transforms.length; i++) {
@@ -96,6 +99,7 @@ export function genElement (el: ASTElement, state: CodegenState): string {
 
 // hoist static sub-trees out
 function genStatic (el: ASTElement, state: CodegenState): string {
+  console.log('genStatic')
   el.staticProcessed = true
   // Some elements (templates) need to behave differently inside of a v-pre
   // node.  All pre nodes are static roots, so we can use this as a location to
@@ -115,6 +119,7 @@ function genStatic (el: ASTElement, state: CodegenState): string {
 
 // v-once
 function genOnce (el: ASTElement, state: CodegenState): string {
+  console.log('genOnce')
   el.onceProcessed = true
   if (el.if && !el.ifProcessed) {
     return genIf(el, state)
@@ -466,6 +471,7 @@ function needsNormalization (el: ASTElement): boolean {
 
 function genNode (node: ASTNode, state: CodegenState): string {
   if (node.type === 1) {
+    // console.log('node.type')
     return genElement(node, state)
   } else if (node.type === 3 && node.isComment) {
     return genComment(node)

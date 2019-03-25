@@ -54,6 +54,7 @@ if (process.env.NODE_ENV !== 'production') {
 
   const hasHandler = {
     has (target, key) {
+      // console.log('触发了has，key is ', key)
       const has = key in target
       const isAllowed = allowedGlobals(key) ||
         (typeof key === 'string' && key.charAt(0) === '_' && !(key in target.$data))
@@ -76,6 +77,7 @@ if (process.env.NODE_ENV !== 'production') {
   }
 
   initProxy = function initProxy (vm) {
+    // console.log('进入了initProxy')
     if (hasProxy) {
       // determine which proxy handler to use
       const options = vm.$options

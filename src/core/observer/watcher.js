@@ -49,6 +49,8 @@ export default class Watcher {
     options?: ?Object,
     isRenderWatcher?: boolean
   ) {
+    // console.log('vm is ', vm)
+    // console.log('expOrFn is ', expOrFn)
     this.vm = vm
     if (isRenderWatcher) {
       vm._watcher = this
@@ -99,11 +101,14 @@ export default class Watcher {
    * Evaluate the getter, and re-collect dependencies.
    */
   get () {
+    console.log('get 被调用了')
     pushTarget(this)
     let value
     const vm = this.vm
     try {
+      // console.log('this.getter is ', this.getter)
       value = this.getter.call(vm, vm)
+      // console.log('update value is ', value)
     } catch (e) {
       if (this.user) {
         handleError(e, vm, `getter for watcher "${this.expression}"`)

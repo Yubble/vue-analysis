@@ -10,8 +10,10 @@ import {
 import { updateListeners } from '../vdom/helpers/index'
 
 export function initEvents (vm: Component) {
+  // console.log('init')
   vm._events = Object.create(null)
   vm._hasHookEvent = false
+  // console.log('initEvents options is ', vm.$options._parentListeners)
   // init parent attached events
   const listeners = vm.$options._parentListeners
   if (listeners) {
@@ -62,6 +64,7 @@ export function eventsMixin (Vue: Class<Component>) {
       // optimize hook:event cost by using a boolean flag marked at registration
       // instead of a hash lookup
       if (hookRE.test(event)) {
+        // console.log('event is ', event)
         vm._hasHookEvent = true
       }
     }

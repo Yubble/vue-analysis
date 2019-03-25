@@ -82,6 +82,7 @@ export function mergeDataOrFn (
   vm?: Component
 ): ?Function {
   if (!vm) {
+    // console.log('不是Vue构造器过来的')
     // in a Vue.extend merge, both should be functions
     if (!childVal) {
       return parentVal
@@ -101,6 +102,7 @@ export function mergeDataOrFn (
       )
     }
   } else {
+    // console.log('是Vue构造器过来的')
     return function mergedInstanceDataFn () {
       // instance merge
       const instanceData = typeof childVal === 'function'
@@ -110,8 +112,10 @@ export function mergeDataOrFn (
         ? parentVal.call(vm, vm)
         : parentVal
       if (instanceData) {
+        // console.log('instanceData 有值')
         return mergeData(instanceData, defaultData)
       } else {
+        // console.log('instanceData 无值')
         return defaultData
       }
     }
@@ -147,6 +151,8 @@ function mergeHook (
   parentVal: ?Array<Function>,
   childVal: ?Function | ?Array<Function>
 ): ?Array<Function> {
+  // console.log('childVal is ', childVal)
+  // console.log('parentVal is ', parentVal)
   const res = childVal
     ? parentVal
       ? parentVal.concat(childVal)
@@ -186,6 +192,10 @@ function mergeAssets (
   vm?: Component,
   key: string
 ): Object {
+  // console.log('存在御三家')
+  // console.log('mergeAssets parent is ', parentVal)
+  // console.log('mergeAssets child is ', childVal)
+  // 每一次的child都会把parent覆盖掉
   const res = Object.create(parentVal || null)
   if (childVal) {
     process.env.NODE_ENV !== 'production' && assertObjectType(key, childVal, vm)
@@ -271,7 +281,11 @@ const defaultStrat = function (parentVal: any, childVal: any): any {
  * Validate component names
  */
 function checkComponents (options: Object) {
+  // console.log('开始对components进行检查')
+  // console.log('options.components is ', options.components)
+  // 这里的options.components并不是全局哟，只是在options中传入的components
   for (const key in options.components) {
+    // console.log('components is ', key)
     validateComponentName(key)
   }
 }
@@ -296,6 +310,8 @@ export function validateComponentName (name: string) {
  * Object-based format.
  */
 function normalizeProps (options: Object, vm: ?Component) {
+  // console.log('normalize options is ', options)
+  // console.log('normalize vm is ', vm)
   const props = options.props
   if (!props) return
   const res = {}
@@ -312,6 +328,7 @@ function normalizeProps (options: Object, vm: ?Component) {
       }
     }
   } else if (isPlainObject(props)) {
+    // console.log('是纯对象')
     for (const key in props) {
       val = props[key]
       name = camelize(key)
@@ -326,6 +343,7 @@ function normalizeProps (options: Object, vm: ?Component) {
       vm
     )
   }
+  // console.log(res)
   options.props = res
 }
 
@@ -386,19 +404,19 @@ function assertObjectType (name: string, value: any, vm: ?Component) {
  * Core utility used in both instantiation and inheritance.
  */
 export function mergeOptions (
-  parent: Object,
-  child: Object,
+  parent: Object,   // 解析到构造函数自带的options
+  child: Object,    // 解析到直接传进来的options
   vm?: Component
 ): Object {
-  console.log('parent is ', parent)
-  console.log('child is ', child)
-  console.log('vm is ', vm)
   if (process.env.NODE_ENV !== 'production') {
-    checkComponents(child)
+    checkComponents(child)  // 检查组件名是否合法
   }
   
+  // console.log('parent is ', parent)
+  // console.log('child is ', child)
   if (typeof child === 'function') {
-    child = child.options
+    console.log('child is a function')
+    child = child.options   // 如果Child是function类型，那我们取它的.options属性
   }
 
   normalizeProps(child, vm)
@@ -409,31 +427,47 @@ export function mergeOptions (
   // but only if it is a raw options object that isn't
   // the result of another mergeOptions call.
   // Only merged options has the _base property.
+  // console.log('child_base is ', child._base)
   if (!child._base) {
+    // console.log('不存在_base')
     if (child.extends) {
+      // console.log('存在extends，先把extends上的options合并到Vue的构造函数options上')
       parent = mergeOptions(parent, child.extends, vm)
+      // console.log(parent)
     }
     if (child.mixins) {
+      // console.log('存在minxins')
       for (let i = 0, l = child.mixins.length; i < l; i++) {
         parent = mergeOptions(parent, child.mixins[i], vm)
       }
     }
   }
 
+  // console.log(child)
+  // console.log('strats is ', strats)
+  // console.log('defaultStrat is ', defaultStrat)
   const options = {}
   let key
   for (key in parent) {
+    // console.log('parent key is ', key)
     mergeField(key)
   }
   for (key in child) {
+    // console.log('child key is ', key)
     if (!hasOwn(parent, key)) {
       mergeField(key)
     }
   }
   function mergeField (key) {
+    // console.log('mergeField key is ', key)
     const strat = strats[key] || defaultStrat
     options[key] = strat(parent[key], child[key], vm, key)
+    // if (key == 'components') {
+    //   console.log('走到了组件这，components is ', options[key])
+    // }
+    // console.log(`options ${key} is`,  options[key])
   }
+  // console.log('马上要返回options了,', options)
   return options
 }
 

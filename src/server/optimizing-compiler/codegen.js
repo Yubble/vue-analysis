@@ -79,6 +79,7 @@ function genSSRElement (el: ASTElement, state: CodegenState): string {
 }
 
 function genNormalElement (el, state, stringifyChildren) {
+  // console.log('gen _c')
   const data = el.plain ? undefined : genData(el, state)
   const children = stringifyChildren
     ? `[${genChildrenAsStringNode(el, state)}]`

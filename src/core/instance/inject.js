@@ -44,11 +44,17 @@ export function resolveInject (inject: any, vm: Component): ?Object {
       ? Reflect.ownKeys(inject)
       : Object.keys(inject)
 
+    // 此时应该已经获得所有inject的keys了
+    // console.log('inject keys is ', keys)
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i]
+      // console.log('inject is ', inject)
+      // console.log('key is ', key)
       // #6574 in case the inject object is observed...
       if (key === '__ob__') continue
       const provideKey = inject[key].from
+      // 此时的inject数组已经都加上from了
+      // console.log('from is ', provideKey)
       let source = vm
       while (source) {
         if (source._provided && hasOwn(source._provided, provideKey)) {
