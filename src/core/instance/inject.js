@@ -14,8 +14,10 @@ export function initProvide (vm: Component) {
 }
 
 export function initInjections (vm: Component) {
+  // 得出vm中所有Inject所对应的父级文案
   const result = resolveInject(vm.$options.inject, vm)
   if (result) {
+    // 如果存在inject的Object
     toggleObserving(false)
     Object.keys(result).forEach(key => {
       /* istanbul ignore else */
