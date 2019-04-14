@@ -30,7 +30,7 @@ export default class Dep {
 
   depend () {
     if (Dep.target) {
-      console.log('Dep.target this is ', this)
+      // console.log('Dep.target this is ', this)
       Dep.target.addDep(this)
     }
   }

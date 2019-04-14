@@ -162,6 +162,7 @@ export function defineReactive (
     configurable: true,
     get: function reactiveGetter () {
       // console.log('get arg is ', arguments)
+      console.log('defineReactive val is ', val)
       const value = getter ? getter.call(obj) : val
       // console.log('Dep.target ', Dep.target, ' 被访问了')
       if (Dep.target) {

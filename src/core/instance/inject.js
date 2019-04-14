@@ -14,14 +14,17 @@ export function initProvide (vm: Component) {
 }
 
 export function initInjections (vm: Component) {
-  // 得出vm中所有Inject所对应的父级文案
+  // 得出vm中所有Inject所对应的父级或祖级文案obj
   const result = resolveInject(vm.$options.inject, vm)
+  // 如果存在inject的Object
   if (result) {
-    // 如果存在inject的Object
+    // 关闭Observe中的监听功能
     toggleObserving(false)
+    // 轮询所有inject将其装上双向绑定
     Object.keys(result).forEach(key => {
       /* istanbul ignore else */
       if (process.env.NODE_ENV !== 'production') {
+        console.log('有inject，inject的key为', key)
         defineReactive(vm, key, result[key], () => {
           warn(
             `Avoid mutating an injected value directly since the changes will be ` +
